@@ -1,7 +1,11 @@
 package engenoid.tessocrtest;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,12 +15,15 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import engenoid.tessocrtest.Core.CameraEngine;
 import engenoid.tessocrtest.Core.ExtraViews.FocusBoxView;
 import engenoid.tessocrtest.Core.Imaging.Tools;
 import engenoid.tessocrtest.Core.TessTool.TessAsyncEngine;
 
-
+//http://www.codeproject.com/Tips/840623/Android-Character-Recognition
 public class MainActivity extends Activity implements SurfaceHolder.Callback, View.OnClickListener,
         Camera.PictureCallback, Camera.ShutterCallback {
 
@@ -97,7 +104,13 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
 
     @Override
     public void onClick(View v) {
-        if(v == shutterButton){
+        try {
+            recognise();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+/*        if(v == shutterButton){
             if(cameraEngine != null && cameraEngine.isOn()){
                 cameraEngine.takeShot(this, this, this);
             }
@@ -107,7 +120,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
             if(cameraEngine!=null && cameraEngine.isOn()){
                 cameraEngine.requestFocus();
             }
-        }
+        }*/
     }
 
     @Override
@@ -133,6 +146,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
     @Override
     public void onShutter() {
 
+    }
+
+    public void recognise() throws IOException {
+        InputStream ims = getAssets().open("text.jpg");
+        Bitmap bmp = BitmapFactory.decodeStream(ims);
+        new TessAsyncEngine().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, this, bmp);
     }
 
 }
