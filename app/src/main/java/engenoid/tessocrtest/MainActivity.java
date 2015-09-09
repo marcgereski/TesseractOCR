@@ -104,13 +104,13 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
 
     @Override
     public void onClick(View v) {
-        try {
+/*        try {
             recognise();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
-/*        if(v == shutterButton){
+        if(v == shutterButton){
             if(cameraEngine != null && cameraEngine.isOn()){
                 cameraEngine.takeShot(this, this, this);
             }
@@ -120,7 +120,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
             if(cameraEngine!=null && cameraEngine.isOn()){
                 cameraEngine.requestFocus();
             }
-        }*/
+        }
     }
 
     @Override
@@ -149,7 +149,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Vi
     }
 
     public void recognise() throws IOException {
-        InputStream ims = getAssets().open("text.jpg");
+        InputStream ims = getAssets().open("text.png");
         Bitmap bmp = BitmapFactory.decodeStream(ims);
         new TessAsyncEngine().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, this, bmp);
     }
